@@ -4,9 +4,17 @@
       <el-col :span="8">
         <div class="grid-content bg-purple">
           <div style="height:5vh"></div>
-          <div ref="chartOne" style="height: 30vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;" v-loading="isLoading"></div>
+          <div
+            ref="chartOne"
+            style="height: 30vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;"
+            v-loading="isLoading"
+          ></div>
           <div style="height:5vh"></div>
-          <div ref="chartTwo" style="height: 43vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;" v-loading="isLoading"></div>
+          <div
+            ref="chartTwo"
+            style="height: 43vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;"
+            v-loading="isLoading"
+          ></div>
         </div>
       </el-col>
       <el-col :span="8">
@@ -21,71 +29,79 @@
           <el-button type="info" @click="setEcs(1)">总确诊</el-button>
           <el-button type="info" @click="setEcs(2)">新增确诊</el-button>
           <el-button type="info" @click="exportExcel">导出数据</el-button>
-          <div ref="chartMap" style="width: 100%;height: 50vh;border: 2px solid #f9f9fa;border-radius: 20px" v-loading="isLoading">
-          </div>
+          <div
+            ref="chartMap"
+            style="width: 100%;height: 50vh;border: 2px solid #f9f9fa;border-radius: 20px"
+            v-loading="isLoading"
+          ></div>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content bg-purple">
           <div style="height:5vh"></div>
-          <div ref="chartThree" style="height:30vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;" v-loading="isLoading"></div>
+          <div
+            ref="chartThree"
+            style="height:30vh;border: 2px solid #f9f9fa;padding-top:15px ;border-radius: 20px;"
+            v-loading="isLoading"
+          ></div>
           <div style="height:5vh"></div>
-          <div ref="chartFour" style="height:45vh;border: 2px solid #f9f9fa;border-radius: 5px;">
+          <div
+            ref="chartFour"
+            style="height:45vh;border: 2px solid #f9f9fa;border-radius: 5px;"
+          >
             <el-table
-                    id="out-table"
-                    v-loading="isLoading"
-                    height="45vh"
-                    :data="tables"
-                    style="width: 100%"
-                    :default-sort = "{prop: 'total.nowConfirm', order: 'descending'}"
+              id="out-table"
+              v-loading="isLoading"
+              height="45vh"
+              :data="tables"
+              style="width: 100%"
+              :default-sort="{ prop: 'total.nowConfirm', order: 'descending' }"
             >
-              <el-table-column
-                      prop="sf"
-                      label="省份"
-                      sortable
-                      width="80">
+              <el-table-column prop="sf" label="省份" sortable width="80">
+              </el-table-column>
+              <el-table-column prop="name" label="城市" sortable width="150">
               </el-table-column>
               <el-table-column
-                      prop="name"
-                      label="城市"
-                      sortable
-                      width="150">
+                prop="today.confirm"
+                label="新增"
+                sortable
+                width="100"
+              >
               </el-table-column>
               <el-table-column
-                      prop="today.confirm"
-                      label="新增"
-                      sortable
-                      width="100">
+                prop="total.nowConfirm"
+                label="现存"
+                width="100"
+                sortable
+              >
               </el-table-column>
               <el-table-column
-                      prop="total.nowConfirm"
-                      label="现存"
-                      width="100"
-                      sortable>
+                prop="total.grade"
+                label="区域风险"
+                width="120"
+                sortable
+              >
               </el-table-column>
               <el-table-column
-                      prop="total.grade"
-                      label="区域风险"
-                      width="120"
-                      sortable>
+                prop="total.confirm"
+                label="总确诊"
+                width="100"
+                sortable
+              >
               </el-table-column>
               <el-table-column
-                      prop="total.confirm"
-                      label="总确诊"
-                      width="100"
-                      sortable>
+                prop="total.heal"
+                label="治愈"
+                width="100"
+                sortable
+              >
               </el-table-column>
               <el-table-column
-                      prop="total.heal"
-                      label="治愈"
-                      width="100"
-                      sortable>
-              </el-table-column>
-              <el-table-column
-                      prop="total.dead"
-                      label="死亡"
-                      width="100"
-                      sortable>
+                prop="total.dead"
+                label="死亡"
+                width="100"
+                sortable
+              >
               </el-table-column>
             </el-table>
           </div>
@@ -96,8 +112,8 @@
 </template>
 
 <script>
-  import FileSaver from 'file-saver'
-  import XLSX from 'xlsx'
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 import echarts from "echarts";
 import china from "echarts/map/json/china.json";
 // import lodash from 'lodash'
@@ -106,56 +122,56 @@ export default {
   name: "echartest",
   data() {
     return {
-      nowTime:"",
-      txdata:[],
-      heal: 0,
-      dead: 0,
-      chinaTotal: 0,
-      chinaAdd: 0,
-      chinaNow: 0,
-      datas: [],
-      lastTime: "",
-      check: 0,
-      isLoading: false,
-      isChina: false,
-      timer:"",
-      tables:[]
+      nowTime: "", //现在时间
+      txdata: [], //腾讯疫情网数据
+      heal: 0, //治愈
+      dead: 0, //死亡
+      chinaTotal: 0, //中国总确诊
+      chinaAdd: 0, //新增
+      chinaNow: 0, //现存
+      datas: [], //中国疫情网数据
+      lastTime: "", //最后更新时间
+      check: 0, //当前地图选择 新增/总/现存
+      isLoading: false, //是否正在加载
+      isChina: false, //是否为中国数据 （这里没有用，后面拓展全球地图再用）
+      timer: "", //定时器，实时获取时间
+      tables: [] //表格数据
     };
   },
   mounted() {
     this.getSd();
     let vm = this;
-    this.timer = setInterval(function () {
+    this.timer = setInterval(function() {
       vm.getDates();
-    },1000)
+    }, 1000);
   },
   beforeDestroy() {
-    clearInterval(this.timer)
+    clearInterval(this.timer);
   },
   methods: {
-    setChartTwo(){
+    setChartTwo() {
       let datas = this.txdata.slice(-7);
       let dates = [];
       let confirm = [];
-      datas.forEach(item=>{
-        dates.push(item.date)
+      datas.forEach(item => {
+        dates.push(item.date);
         confirm.push(item.confirm);
-      })
-      console.log(dates)
+      });
+      console.log(dates);
       let option = {
         title: {
-          text: '新增速率',
-          subtext: '来源自腾讯疫情网',
-          left: 'center',
-          textStyle:{
-            color:'black'
+          text: "新增速率",
+          subtext: "来源自腾讯疫情网",
+          left: "center",
+          textStyle: {
+            color: "black"
           },
-          subtextStyle:{
-            color:'black'
+          subtextStyle: {
+            color: "black"
           }
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           boundaryGap: false,
           data: dates,
           axisLabel: {
@@ -163,33 +179,35 @@ export default {
           }
         },
         yAxis: {
-          type: 'value',
+          type: "value",
           axisLabel: {
             color: "black" //刻度线标签颜色
           }
         },
-        series: [{
-          data: confirm,
-          label:{
-            show: true,
-            color:"black"
-          },
-          type: 'line',
-          areaStyle: {}
-        }]
+        series: [
+          {
+            data: confirm,
+            label: {
+              show: true,
+              color: "black"
+            },
+            type: "line",
+            areaStyle: {}
+          }
+        ]
       };
 
       let myChart = echarts.init(this.$refs.chartTwo);
       myChart.setOption(option);
     },
-    setChartOne(){
+    setChartOne() {
       let city = [];
       let adds = [];
       let now = [];
       // let sum = [];
       // let heal = [];
       // let dead = [];
-      for(let i=0;i<7;i++){
+      for (let i = 0; i < 7; i++) {
         let datas = this.datas[i];
         city.unshift(datas.name);
         adds.unshift(datas.today.confirm);
@@ -201,29 +219,30 @@ export default {
 
       let option = {
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           }
         },
         legend: {
           // ['新增', '现存', '累计确诊', '累计治愈', '死亡']
-          data: ['新增', '现存'],
-          textStyle:{
-            color:"black"
+          data: ["新增", "现存"],
+          textStyle: {
+            color: "black"
           }
         },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
           containLabel: true,
-          textStyle:{
-            color:"black"
+          textStyle: {
+            color: "black"
           }
         },
         xAxis: {
-          type: 'value',
+          type: "value",
           axisLabel: {
             color: "black" //刻度线标签颜色
           }
@@ -237,28 +256,28 @@ export default {
         },
         series: [
           {
-            name: '新增',
-            type: 'bar',
-            stack: '总量',
-            textStyle:{
-              color:"black"
+            name: "新增",
+            type: "bar",
+            stack: "总量",
+            textStyle: {
+              color: "black"
             },
             label: {
-              textStyle:{
-                color:"black"
+              textStyle: {
+                color: "black"
               },
               show: true,
-              position: 'insideRight'
+              position: "insideRight"
             },
             data: adds
           },
           {
-            name: '现存',
-            type: 'bar',
-            stack: '总量',
+            name: "现存",
+            type: "bar",
+            stack: "总量",
             label: {
               show: true,
-              position: 'insideRight'
+              position: "insideRight"
             },
             data: now
           }
@@ -297,28 +316,39 @@ export default {
       let myChart = echarts.init(this.$refs.chartOne);
       myChart.setOption(option);
     },
-    getDates(){
+    getDates() {
       let myDate = new Date();
       let year = myDate.getFullYear();
-      let month = myDate.getMonth()+1;
+      let month = myDate.getMonth() + 1;
       let day = myDate.getDate();
       let hour = myDate.getHours();
       let min = myDate.getMinutes();
       let s = myDate.getSeconds();
-      if(month<10){month="0"+month};
-      if(day<10){day="0"+day};
-      if(hour<10){hour="0"+hour};
-      if(min<10){min="0"+min};
-      if(s<10){s="0"+s};
-      this.nowTime = year+"-"+month+"-"+day+" "+hour+":"+min+":"+s;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (day < 10) {
+        day = "0" + day;
+      }
+      if (hour < 10) {
+        hour = "0" + hour;
+      }
+      if (min < 10) {
+        min = "0" + min;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      this.nowTime =
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + s;
     },
-    getTx(){
+    getTx() {
       return new Promise(resolve => {
-        axios.post('ans').then(res=>{
+        axios.post("ans").then(res => {
           console.log(res.data.data.chinaDayAddList);
           resolve(res.data.data.chinaDayAddList);
-        })
-      })
+        });
+      });
     },
     getSd() {
       //全国疫情数据获取
@@ -328,7 +358,7 @@ export default {
         console.log(data);
         let dss = data.areaTree[0].children;
         this.datas = dss;
-        console.log(data)
+        console.log(data);
         this.chinaTotal = data.chinaTotal.confirm;
         this.chinaAdd = data.chinaAdd.confirm;
         this.chinaNow = data.chinaTotal.nowConfirm;
@@ -337,23 +367,23 @@ export default {
         this.lastTime = data.lastUpdateTime;
         this.isLoading = false;
         let vm = this;
-        this.getTx().then(ress=>{
+        this.getTx().then(ress => {
           vm.txdata = ress;
           this.setChartTwo();
-        })
+        });
         this.setEcs(this.check);
         let citys = [];
-        dss.forEach(item=>{
-          item.children.forEach((items,index)=>{
-            if(items.name =="境外输入"){
-              item.children[index].name = item.name+items.name;
+        dss.forEach(item => {
+          item.children.forEach((items, index) => {
+            if (items.name == "境外输入") {
+              item.children[index].name = item.name + items.name;
             }
-            if(items.name =="地区待确认"){
-              item.children[index].name = items.name+"("+item.name+")";
+            if (items.name == "地区待确认") {
+              item.children[index].name = items.name + "(" + item.name + ")";
             }
             item.children[index].sf = item.name;
-          })
-          citys= citys.concat(item.children);
+          });
+          citys = citys.concat(item.children);
         });
         console.log(citys);
         this.tables = citys;
@@ -363,62 +393,77 @@ export default {
     },
     exportExcel() {
       /* out-table关联导出的dom节点  */
-      let wb = XLSX.utils.table_to_book(document.querySelector("#out-table"));
+      let wbdom = XLSX.utils.table_to_book(document.querySelector("#out-table"));//这里导出id为out-table的
       /* get binary string as output */
-      let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      let wbout = XLSX.write(wbdom, {
+        bookType: "xlsx",//导出格式
+        bookSST: true,
+        type: "array"
+      });
       try {
-        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '疫情数据.xlsx')
-      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-      return wbout
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          "疫情数据.xlsx"//导出文件名
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") console.log(e, wbout);
+      }
+      return wbout;
     },
-    setChartThree(){
-      let datas = [{value:this.chinaAdd,name:"新增"},{value:this.chinaNow,name:"现存"},{value:this.dead,name:"累计死亡"},{value:this.heal,name:"累计治愈"},{value:this.chinaTotal,name:"累计确诊"}]
-      let names = ["新增","现存","累计死亡","累计治愈","累计确诊"];
+    setChartThree() {
+      let datas = [
+        { value: this.chinaAdd, name: "新增" },
+        { value: this.chinaNow, name: "现存" },
+        { value: this.dead, name: "累计死亡" },
+        { value: this.heal, name: "累计治愈" },
+        { value: this.chinaTotal, name: "累计确诊" }
+      ];
+      let names = ["新增", "现存", "累计死亡", "累计治愈", "累计确诊"];
       let option = {
         title: {
-          text: '疫情数据',
-          subtext: '来自疫情网',
-          left: 'center',
-          textStyle:{
-            color:'black'
+          text: "疫情数据",
+          subtext: "来自疫情网",
+          left: "center",
+          textStyle: {
+            color: "black"
           }
         },
         tooltip: {
-          trigger: 'item',
+          trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
           type: "scroll",
-          orient: 'vertical',
-          textStyle:{
-            color:'black'
+          orient: "vertical",
+          textStyle: {
+            color: "black"
           },
           right: 10,
           top: 20,
           bottom: 20,
-          data: names,
+          data: names
         },
         series: [
           {
-            name: '数据',
-            type: 'pie',
-            radius: '55%',
-            center: ['40%', '50%'],
+            name: "数据",
+            type: "pie",
+            radius: "55%",
+            center: ["40%", "50%"],
             data: datas,
-            itemStyle:{
-              normal:{
-                label:{
+            itemStyle: {
+              normal: {
+                label: {
                   show: true,
-                  formatter: '{b} : {c}'
+                  formatter: "{b} : {c}"
                 },
-                labelLine :{show:true}
+                labelLine: { show: true }
               }
             },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                shadowColor: "rgba(0, 0, 0, 0.5)"
               }
             }
           }
@@ -548,16 +593,19 @@ export default {
 </script>
 
 <style scoped>
-  .font-my {
-    font-size: 40px;font-weight: bolder;-webkit-text-stroke:2px #000000;color: transparent;
-    /*color: white;*/
-    /*-webkit-text-stroke: 2px #000;*/
-    /*font-size: 36px;*/
-    /*font-weight: 800;*/
-    /*padding: 18px;*/
-    /*!*text-shadow: 4px 4px black, -4px -4px black,*!*/
-    /*!*4px -4px black, -4px 4px black;	 }*!*/
-  }
+.font-my {
+  font-size: 40px;
+  font-weight: bolder;
+  -webkit-text-stroke: 2px #000000;
+  color: transparent;
+  /*color: white;*/
+  /*-webkit-text-stroke: 2px #000;*/
+  /*font-size: 36px;*/
+  /*font-weight: 800;*/
+  /*padding: 18px;*/
+  /*!*text-shadow: 4px 4px black, -4px -4px black,*!*/
+  /*!*4px -4px black, -4px 4px black;	 }*!*/
+}
 .charts {
   width: 100%;
   height: 100%;
@@ -573,9 +621,9 @@ export default {
 }
 .el-row {
   margin-bottom: 0px;
-&:last-child {
-   margin-bottom: 0;
- }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .el-col {
   border-radius: 4px;
